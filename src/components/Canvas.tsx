@@ -1,14 +1,12 @@
-import { useEffect, useRef, useState } from "react";
-
-export function EditCanvas({
-  imgUrls,
-}: {
-  imgUrls: {
-    source: "youtube" | "spotify";
-    url: string;
-  }[];
-}) {
-  const [ctx, setCtx] = useState<CanvasRenderingContext2D | null>(null);
+import { thumbnailType } from "@/types";
+import { useEffect, useRef } from "react";
+import { useCanvas, useThumbnails } from "@/store";
+export function EditCanvas() {
+  const imgUrls = useThumbnails((s) => s.thumbnails);
+  const { ctx, setCtx } = useCanvas((s) => ({
+    ctx: s.ctx,
+    setCtx: s.setCtx,
+  }));
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   console.log("canvas component");
   useEffect(() => {
@@ -18,18 +16,20 @@ export function EditCanvas({
   }, [canvasRef]);
 
   useEffect(() => {
+    console.log("it subscribed to changes");
     if (ctx && canvasRef.current) {
+      console.log("ctx is present");
       drawImages(ctx, imgUrls, canvasRef.current);
     }
   }, [imgUrls]);
 
   return (
-    <div className=" pt-4">
+    <div className="">
       <canvas
         ref={canvasRef}
-        width={768}
+        width={450}
         height={560}
-        className=" bg-white mx-auto border-purple-900 border-4"
+        className=" bg-white mx-auto"
       />
     </div>
   );
@@ -38,7 +38,7 @@ export function EditCanvas({
 function drawImages(
   ctx: CanvasRenderingContext2D,
   imgUrls: {
-    source: "youtube" | "spotify";
+    source: thumbnailType;
     url: string;
   }[],
   canvasEl: HTMLCanvasElement
@@ -71,10 +71,10 @@ function drawImages(
         Math.floor(idx / tileLayout.cols) * tileLayout.tileHeight;
       ctx.drawImage(
         image,
-        imgUrl.source === "youtube" ? 105 : 0,
-        imgUrl.source === "youtube" ? 45 : 0,
-        imgUrl.source === "youtube" ? image.width - 210 : image.width,
-        imgUrl.source === "youtube" ? image.height - 90 : image.height,
+        imgUrl.source === "youtube-topic" ? 105 : 0,
+        imgUrl.source === "spotify" ? 0 : 45,
+        imgUrl.source === "youtube-topic" ? image.width - 210 : image.width,
+        imgUrl.source === "spotify" ? image.height : image.height - 90,
         xPosition,
         yPosition,
         tileLayout.tileWidth,

@@ -1,4 +1,5 @@
 "use server";
+import util from "util";
 import {
   GoogleAPIResponse,
   SpotifyAPIResponse,
@@ -9,7 +10,7 @@ import { filterUniqueThumbnails } from "./utils";
 export const getYoutubeVideoThumbnails = async (
   id: string
 ): Promise<ThumbnailResponse> => {
-  const playListUrl = `https://www.googleapis.com/youtube/v3/playlistItems?key=${process.env.YOUTUBE}&playlistId=${id}&part=snippet&maxResults=12`;
+  const playListUrl = `https://www.googleapis.com/youtube/v3/playlistItems?key=${process.env.YOUTUBE}&playlistId=${id}&part=snippet&maxResults=50`;
   const res = await fetch(playListUrl);
   if (!res)
     return {
@@ -26,11 +27,14 @@ export const getYoutubeVideoThumbnails = async (
       error: "Playlist is empty",
     };
   }
-  return (
-    await filterUniqueThumbnails(
-      data.items.map((d) => d.snippet.thumbnails.high)
-    )
-  ).map((url) => ({ source: "youtube", url }));
+  return filterUniqueThumbnails(
+    data.items.map((d) => ({
+      ...d.snippet.thumbnails.high,
+      source: d.snippet.videoOwnerChannelTitle.endsWith("Topic")
+        ? "youtube-topic"
+        : "youtube",
+    }))
+  );
 };
 
 export const getSpotifyThumbnails = async (
@@ -49,12 +53,9 @@ export const getSpotifyThumbnails = async (
   const data = (await res.json()) as SpotifyAPIResponse;
   if (data.error) return { error: data.error.message };
   if (data.items) {
-    console.log(data.items.map((d) => d.track.album.images).map((_) => _[1]));
-    return (
-      await filterUniqueThumbnails(
-        data.items.map((d) => d.track.album.images).map((_) => _[1]) // for 300x300 image
-      )
-    ).map((t) => ({ source: "spotify", url: t }));
+    return filterUniqueThumbnails(
+      data.items.map((d) => ({ ...d.track.album.images[1], source: "spotify" }))
+    );
   }
   return { error: "Internal server error. Try again after some time" };
 };

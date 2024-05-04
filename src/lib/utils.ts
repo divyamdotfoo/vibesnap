@@ -1,3 +1,11 @@
+import { Thumbnails, thumbnailType } from "@/types";
+import { type ClassValue, clsx } from "clsx";
+import { twMerge } from "tailwind-merge";
+
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs));
+}
+
 export function extractPlaylistId(url: string): {
   source: "youtube" | "spotify";
   id: string;
@@ -24,10 +32,11 @@ export const filterUniqueThumbnails = async (
     url: string;
     width: number;
     height: number;
+    source: thumbnailType;
   }[]
 ) => {
   const imageSet = new Set();
-  const uniqueThumbnails: string[] = [];
+  const uniqueThumbnails: Thumbnails = [];
   const thumbnailHashes = await Promise.all(
     thumbnails.map(async (thumbnail) => {
       const res = await fetch(thumbnail.url, {
@@ -35,10 +44,10 @@ export const filterUniqueThumbnails = async (
       });
       const size = res.headers.get("Content-Length");
       const meta = size ? parseInt(size, 10) : null;
-      console.log(`${meta}-${thumbnail.width}-${thumbnail.width}`);
       return {
         url: thumbnail.url,
         thumbnailHash: `${meta}-${thumbnail.width}-${thumbnail.width}`,
+        source: thumbnail.source,
       };
     })
   );
@@ -47,7 +56,7 @@ export const filterUniqueThumbnails = async (
   for (const tHash of thumbnailHashes) {
     if (!imageSet.has(tHash.thumbnailHash)) {
       imageSet.add(tHash.thumbnailHash);
-      uniqueThumbnails.push(tHash.url);
+      uniqueThumbnails.push({ source: tHash.source, url: tHash.url });
     }
   }
   return uniqueThumbnails;

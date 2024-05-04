@@ -25,7 +25,7 @@ export type GoogleAPIResponse = {
     id: string;
     kind: string;
     snippet: {
-      channelTitle: string;
+      videoOwnerChannelTitle: string;
       thumbnails: YoutubeThumbnails;
     };
   }[];
@@ -48,10 +48,15 @@ export type SpotifyAPIResponse = {
     status: number;
   };
 };
+export type thumbnailType = "youtube-topic" | "youtube" | "spotify";
+export type Thumbnails = {
+  source: thumbnailType;
+  url: string;
+}[];
 
 export type ThumbnailResponse = Promise<
   | {
-      source: "youtube" | "spotify";
+      source: thumbnailType;
       url: string;
     }[]
   | {
