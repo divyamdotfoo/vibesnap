@@ -3,12 +3,12 @@ import { useEffect, useRef } from "react";
 import { useCanvas, useThumbnails } from "@/store";
 export function EditCanvas() {
   const imgUrls = useThumbnails((s) => s.thumbnails);
-  const { ctx, setCtx } = useCanvas((s) => ({
+  const { ctx, setCtx, setOriginal } = useCanvas((s) => ({
     ctx: s.ctx,
     setCtx: s.setCtx,
+    setOriginal: s.setOriginalImage,
   }));
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  console.log("canvas component");
   useEffect(() => {
     if (canvasRef.current) {
       setCtx(canvasRef.current.getContext("2d"));
@@ -16,10 +16,15 @@ export function EditCanvas() {
   }, [canvasRef]);
 
   useEffect(() => {
-    console.log("it subscribed to changes");
-    if (ctx && canvasRef.current) {
-      console.log("ctx is present");
+    if (ctx && canvasRef.current && imgUrls.length) {
       drawImages(ctx, imgUrls, canvasRef.current);
+      const timeOut =
+        imgUrls[0].source === "spotify"
+          ? 30 * imgUrls.length
+          : 60 * imgUrls.length;
+      setTimeout(() => {
+        setOriginal();
+      }, timeOut);
     }
   }, [imgUrls]);
 
@@ -44,6 +49,7 @@ function drawImages(
   canvasEl: HTMLCanvasElement
 ) {
   if (!imgUrls.length) return;
+  console.log("inside draw", imgUrls);
   ctx.clearRect(0, 0, canvasEl.width, canvasEl.height);
   let tileLayout: ReturnType<typeof calculateTileLayout>;
   tileLayout = calculateTileLayout(
@@ -51,9 +57,7 @@ function drawImages(
     canvasEl.width,
     canvasEl.height
   );
-  console.log(tileLayout);
   if (tileLayout.totalTiles - imgUrls.length > 0) {
-    console.log("inside if");
     const prevColLength = tileLayout.cols;
     tileLayout = calculateTileLayout(
       imgUrls.length - prevColLength,
@@ -61,10 +65,10 @@ function drawImages(
       canvasEl.height
     );
   }
-  console.log(tileLayout);
   imgUrls.slice(0, tileLayout.totalTiles).forEach((imgUrl, idx) => {
     const image = new Image();
     image.src = imgUrl.url;
+    image.crossOrigin = "Anonymous";
     image.onload = () => {
       const xPosition = (idx % tileLayout.cols) * tileLayout.tileWidth;
       const yPosition =

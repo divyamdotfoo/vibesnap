@@ -1,6 +1,6 @@
 "use client";
 import { EditCanvas } from "./Canvas";
-import { EditorTools } from "./Editor";
+import { Filters } from "./Filters";
 import { Input } from "./Input";
 
 export function Main() {
@@ -9,7 +9,8 @@ export function Main() {
       <Input />
       <div className=" flex pt-4 gap-4 items-start justify-center">
         <EditCanvas />
-        <EditorTools />
+        {/* <EditorTools /> */}
+        <Filters />
       </div>
     </>
   );

@@ -19,7 +19,7 @@ export function Input() {
         setErr(data.error);
         return;
       }
-      setImageUrls(data);
+      setImageUrls(data.slice(0, 36));
     }
     if (extracted.source === "spotify") {
       const data = await getSpotifyThumbnails(extracted.id);
@@ -27,7 +27,7 @@ export function Input() {
         setErr(data.error);
         return;
       }
-      setImageUrls(data);
+      setImageUrls(data.slice(0, 36));
     }
   };
   return (

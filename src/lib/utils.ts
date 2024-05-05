@@ -45,7 +45,7 @@ export const filterUniqueThumbnails = async (
       const size = res.headers.get("Content-Length");
       const meta = size ? parseInt(size, 10) : null;
       return {
-        url: thumbnail.url,
+        url: `/api/google-img?url=${thumbnail.url}`,
         thumbnailHash: `${meta}-${thumbnail.width}-${thumbnail.width}`,
         source: thumbnail.source,
       };
