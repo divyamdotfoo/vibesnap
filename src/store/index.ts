@@ -13,6 +13,10 @@ type CanvasStore = {
   originalImage: ImageData | null;
   setOriginalImage: () => void;
   reset: () => void;
+  showCanvas: boolean;
+  setShow: (b: boolean) => void;
+  loading: boolean;
+  setLoading: (b: boolean) => void;
 };
 export const useCanvas = create<CanvasStore>((set) => ({
   ctx: null,
@@ -39,6 +43,10 @@ export const useCanvas = create<CanvasStore>((set) => ({
   },
   brightness: [10],
   setBrightness: (v) => set({ brightness: v }),
+  showCanvas: false,
+  setShow: (b) => set({ showCanvas: b }),
+  loading: false,
+  setLoading: (b) => set({ loading: b }),
 }));
 
 type ThumbnailStore = {

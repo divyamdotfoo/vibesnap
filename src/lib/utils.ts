@@ -35,6 +35,7 @@ export const filterUniqueThumbnails = async (
     source: thumbnailType;
   }[]
 ) => {
+  console.log(thumbnails);
   const imageSet = new Set();
   const uniqueThumbnails: Thumbnails = [];
   const thumbnailHashes = await Promise.all(
@@ -45,7 +46,10 @@ export const filterUniqueThumbnails = async (
       const size = res.headers.get("Content-Length");
       const meta = size ? parseInt(size, 10) : null;
       return {
-        url: `/api/google-img?url=${thumbnail.url}`,
+        url:
+          thumbnail.source === "spotify"
+            ? thumbnail.url
+            : `/api/google-img?url=${thumbnail.url}`,
         thumbnailHash: `${meta}-${thumbnail.width}-${thumbnail.width}`,
         source: thumbnail.source,
       };

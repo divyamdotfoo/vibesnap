@@ -27,7 +27,7 @@ export function Filters() {
     setFilters([]);
     async function populateFilters() {
       for (const filter of FILTERS) {
-        await new Promise((res) => setTimeout(res, 50));
+        await new Promise((res) => setTimeout(res, 20));
         generateFilters[filter](
           ctx,
           originalImage,

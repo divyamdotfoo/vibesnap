@@ -1,13 +1,18 @@
+"use client";
 import { thumbnailType } from "@/types";
 import { useEffect, useRef } from "react";
 import { useCanvas, useThumbnails } from "@/store";
 export function EditCanvas() {
   const imgUrls = useThumbnails((s) => s.thumbnails);
-  const { ctx, setCtx, setOriginal } = useCanvas((s) => ({
-    ctx: s.ctx,
-    setCtx: s.setCtx,
-    setOriginal: s.setOriginalImage,
-  }));
+  const { ctx, setCtx, setOriginal, setShowCanvas, showCanvas, setLoading } =
+    useCanvas((s) => ({
+      ctx: s.ctx,
+      setCtx: s.setCtx,
+      setOriginal: s.setOriginalImage,
+      showCanvas: s.showCanvas,
+      setShowCanvas: s.setShow,
+      setLoading: s.setLoading,
+    }));
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   useEffect(() => {
     if (canvasRef.current) {
@@ -24,6 +29,8 @@ export function EditCanvas() {
           : 60 * imgUrls.length;
       setTimeout(() => {
         setOriginal();
+        setShowCanvas(true);
+        setLoading(false);
       }, timeOut);
     }
   }, [imgUrls]);
@@ -34,13 +41,16 @@ export function EditCanvas() {
         ref={canvasRef}
         width={450}
         height={560}
-        className=" bg-white mx-auto"
+        className=" bg-white mx-auto rounded-md scale-75 -translate-y-16"
+        style={{
+          display: showCanvas ? "" : "none",
+        }}
       />
     </div>
   );
 }
 
-function drawImages(
+export function drawImages(
   ctx: CanvasRenderingContext2D,
   imgUrls: {
     source: thumbnailType;

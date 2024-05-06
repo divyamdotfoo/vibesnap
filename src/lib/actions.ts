@@ -53,7 +53,11 @@ export const getSpotifyThumbnails = async (
   if (data.error) return { error: data.error.message };
   if (data.items) {
     return filterUniqueThumbnails(
-      data.items.map((d) => ({ ...d.track.album.images[1], source: "spotify" }))
+      data.items
+        .filter(
+          (d) => d.track && d.track.album && d.track.album.images.length !== 0
+        )
+        .map((d) => ({ ...d.track.album.images[1], source: "spotify" }))
     );
   }
   return { error: "Internal server error. Try again after some time" };
