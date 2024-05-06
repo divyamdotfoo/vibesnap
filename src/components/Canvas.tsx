@@ -59,7 +59,6 @@ export function drawImages(
   canvasEl: HTMLCanvasElement
 ) {
   if (!imgUrls.length) return;
-  console.log("inside draw", imgUrls);
   ctx.clearRect(0, 0, canvasEl.width, canvasEl.height);
   let tileLayout: ReturnType<typeof calculateTileLayout>;
   tileLayout = calculateTileLayout(

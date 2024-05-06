@@ -52,7 +52,7 @@ export function Filters() {
       {filters.length === FILTERS.length ? (
         <div className="grid grid-cols-2 gap-3">
           {filters.map((filter) => (
-            <div>
+            <div key={filter[0]}>
               <button
                 className=" w-48 h-60"
                 onClick={() =>

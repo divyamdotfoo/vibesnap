@@ -35,7 +35,6 @@ export const filterUniqueThumbnails = async (
     source: thumbnailType;
   }[]
 ) => {
-  console.log(thumbnails);
   const imageSet = new Set();
   const uniqueThumbnails: Thumbnails = [];
   const thumbnailHashes = await Promise.all(
