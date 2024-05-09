@@ -25,7 +25,6 @@ export async function GET(req: Request) {
   return Response.json(
     {
       message: "ok",
-      data,
     },
     { status: 200 }
   );
