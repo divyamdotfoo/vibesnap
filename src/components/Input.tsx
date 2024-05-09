@@ -4,18 +4,17 @@ import { cn, extractPlaylistId, rockSalt } from "@/lib/utils";
 import { useCanvas, useThumbnails } from "@/store";
 import { useState } from "react";
 import { useToast } from "./ui/use-toast";
+import { motion } from "framer-motion";
 
 export function Input() {
   const setImageUrls = useThumbnails((s) => s.setThumbnails);
   const { toast } = useToast();
-  const { loading, setLoading, setShowCanvas } = useCanvas((s) => ({
+  const { setLoading, setShowCanvas } = useCanvas((s) => ({
     loading: s.loading,
     setLoading: s.setLoading,
     setShowCanvas: s.setShow,
   }));
-  const [val, setVal] = useState(
-    "https://open.spotify.com/playlist/37i9dQZEVXbNG2KDcFcKOF?si=uuqpvjlrS4yJFjm1D0_FOA&pi=Q9cp6qlMQkWJq"
-  );
+  const [val, setVal] = useState("");
   const handlefetchingThumbnails = async () => {
     if (!val) return;
     const extracted = extractPlaylistId(val);
@@ -62,7 +61,9 @@ export function Input() {
         spellCheck={false}
       />
 
-      <button
+      <motion.button
+        whileHover={{ scale: 1.02 }}
+        whileTap={{ scale: 0.98 }}
         className={cn(
           " px-4 rounded-md md:text-lg text-base font-semibold border-white border-2 shadow-2xl shadow-white/60",
           rockSalt.className
@@ -70,7 +71,7 @@ export function Input() {
         onClick={handlefetchingThumbnails}
       >
         Vibe it !
-      </button>
+      </motion.button>
     </div>
   );
 }

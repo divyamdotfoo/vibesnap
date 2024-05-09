@@ -42,40 +42,75 @@ export const getYoutubeVideoThumbnails = async (
 export const getSpotifyThumbnails = async (
   id: string
 ): Promise<ThumbnailResponse> => {
-  const headers = {
-    Authorization: `Bearer ${process.env.SPOTIFY_TOKEN}`,
-  };
-  const res = await fetch(
-    `https://api.spotify.com/v1/playlists/${id}/tracks?limit=50&fields=items(track(album(images)))`,
-    {
-      headers: headers,
+  try {
+    const token = await getSpotifyToken();
+    const headers = {
+      Authorization: `Bearer ${token}`,
+    };
+    const res = await fetch(
+      `https://api.spotify.com/v1/playlists/${id}/tracks?limit=50&fields=items(track(album(images)))`,
+      {
+        headers: headers,
+      }
+    );
+    if (!res)
+      return {
+        errorTitle: "Oops!",
+        errorMessage: "Try again later",
+      };
+    const data = (await res.json()) as SpotifyAPIResponse;
+    if (data.error)
+      return {
+        errorTitle: "No playlist found",
+        errorMessage: "Check your url and try again",
+      };
+    if (data.items && !data.items.length) {
+      return {
+        errorTitle: "Playlist is empty",
+        errorMessage: "Fill your playlist and try again.",
+      };
     }
-  );
-  if (!res)
+    if (data.items) {
+      return filterUniqueThumbnails(
+        data.items
+          .filter(
+            (d) => d.track && d.track.album && d.track.album.images.length !== 0
+          )
+          .map((d) => ({ ...d.track.album.images[1], source: "spotify" }))
+      );
+    }
+  } catch (e) {
     return {
       errorTitle: "Oops!",
       errorMessage: "Try again later",
     };
-  const data = (await res.json()) as SpotifyAPIResponse;
-  if (data.error)
-    return {
-      errorTitle: "No playlist found",
-      errorMessage: "Check your url and try again",
-    };
-  if (data.items && !data.items.length) {
-    return {
-      errorTitle: "Playlist is empty",
-      errorMessage: "Fill your playlist and try again.",
-    };
-  }
-  if (data.items) {
-    return filterUniqueThumbnails(
-      data.items
-        .filter(
-          (d) => d.track && d.track.album && d.track.album.images.length !== 0
-        )
-        .map((d) => ({ ...d.track.album.images[1], source: "spotify" }))
-    );
   }
   return { errorTitle: "Oops!", errorMessage: "Try again later" };
+};
+
+const getSpotifyToken = async () => {
+  const client_id = process.env.SPOTIFY_ID;
+  const client_secret = process.env.SPOTIFY_SECRET;
+
+  const authOptions = {
+    method: "POST",
+    headers: {
+      Authorization: "Basic " + btoa(`${client_id}:${client_secret}`),
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+    body: new URLSearchParams({
+      grant_type: "client_credentials",
+    }),
+    next: { revalidate: 0 },
+  };
+  const res = await fetch(
+    "https://accounts.spotify.com/api/token",
+    authOptions
+  );
+  const data = await res.json();
+  if (data.access_token) {
+    console.log(data.access_token);
+    return data.access_token as string;
+  }
+  throw new Error("");
 };

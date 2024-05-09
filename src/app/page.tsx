@@ -4,7 +4,6 @@ import { cn, rockSalt } from "@/lib/utils";
 import { Input } from "@/components/Input";
 import { EditCanvas } from "@/components/Canvas";
 import { Vibes } from "@/components/HangingImage";
-import { Filters } from "@/components/Filters";
 import { Loader } from "@/components/loader";
 import Link from "next/link";
 
@@ -31,7 +30,7 @@ export default function Page() {
 
 function Socials() {
   return (
-    <div className=" absolute bottom-4 z-50 right-4 flex items-center gap-2">
+    <div className=" absolute lg:top-4 bottom-4 lg:bottom-auto  z-50 right-4  flex items-center gap-2">
       <Link href={"https://github.com/divyamdotfoo/vibesnap"} target="_blank">
         <GithubIcon />
       </Link>

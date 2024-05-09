@@ -61,8 +61,28 @@ body {
   }
 }
 
-.no-scrollbar::-webkit-scrollbar {
-  display: none;
+.scrollbar::-webkit-scrollbar {
+  border-radius: 10px;
+  background-color: white;
+  width: 8px;
+}
+
+.scrollbar::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background-image: linear-gradient(
+    to bottom,
+    rgba(var(--yellow), 0.7),
+    rgba(var(--orange), 0.7),
+    rgba(var(--pink), 0.7),
+    rgba(var(--purple), 0.7),
+    rgba(var(--blue), 0.7)
+  );
+  width: 10px;
+}
+@media (max-width: 1024px) {
+  .scrollbar::-webkit-scrollbar {
+    display: none; /* Hide scrollbar */
+  }
 }
 
 .toast {

@@ -99,6 +99,7 @@ function HangingImage({
         className={cn(
           " w-full h-full rounded-md z-10 shadow-2xl shadow-white/40"
         )}
+        priority
         style={{
           transform:
             hangWith === "tape-1-left"

@@ -1,7 +1,9 @@
+import { cn, rockSalt } from "@/lib/utils";
 import { useCanvas } from "@/store";
 import Download from "@mui/icons-material/FileDownloadOutlined";
 import Share from "@mui/icons-material/ShareOutlined";
 import { useRef } from "react";
+import { motion } from "framer-motion";
 export function DownLoadButton() {
   const downloadLink = useRef<HTMLAnchorElement | null>(null);
   const { ctx } = useCanvas((s) => ({
@@ -16,12 +18,15 @@ export function DownLoadButton() {
   };
   return (
     <>
-      <button
+      <motion.button
         onClick={handler}
-        className=" border-2 border-white p-1 rounded-sm shadow-xl shadow-black/20"
+        className=" border-2 border-white px-4 py-2 flex items-center  gap-2 rounded-sm shadow-xl shadow-black/20"
+        whileHover={{ scale: 1.02 }}
+        whileTap={{ scale: 0.95 }}
       >
-        <Download fontSize="small" />
-      </button>
+        <p className={cn(rockSalt.className, "text-sm")}>Download</p>
+        <Download fontSize="medium" />
+      </motion.button>
       <a ref={downloadLink} download={"vibe.png"}></a>
     </>
   );
@@ -53,9 +58,13 @@ export function ShareBtn() {
   return (
     <button
       onClick={handler}
-      className=" border-2 border-white p-1 rounded-sm shadow-xl shadow-black/20"
+      className={cn(
+        "sm:hidden border-2 border-white px-4 py-2 rounded-sm shadow-xl text-sm shadow-black/20 flex items-center gap-2",
+        rockSalt.className
+      )}
     >
-      <Share />
+      <p>Share</p>
+      <Share fontSize="medium" />
     </button>
   );
 }

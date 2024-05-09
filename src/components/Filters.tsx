@@ -1,9 +1,11 @@
 "use client";
+import { cn, rockSalt } from "@/lib/utils";
 import { useCanvas } from "@/store";
 import { useEffect, useRef, useState } from "react";
 
 //
 const FILTERS = [
+  "original",
   "sunset",
   "vintage",
   "neon",
@@ -12,6 +14,16 @@ const FILTERS = [
   "silverscreen",
   "noir",
   "dreamy",
+  "firestorm",
+  "galaxy",
+  "holographic",
+  "glitch",
+  "pastel",
+  "underwater",
+  "popart",
+  "rainbow",
+  "sketch",
+  "infrared",
 ] as const;
 
 export function Filters() {
@@ -51,6 +63,12 @@ export function Filters() {
     }
     populateFilters();
   }, [originalImage]);
+  useEffect(() => {
+    if (filters.length === FILTERS.length) {
+      setShowCanvas(true);
+      setLoading(false);
+    }
+  }, [filters]);
   return (
     <>
       <canvas
@@ -60,23 +78,26 @@ export function Filters() {
         height={450}
       ></canvas>
       {filters.length === FILTERS.length ? (
-        <div className="flex flex-nowrap max-w-[400px] w-full no-scrollbar gap-4 overflow-x-scroll items-start">
+        <div className="flex flex-nowrap max-w-[350px] lg:max-w-[310px] lg:flex-wrap max-h-[300px] w-full scrollbar gap-4 overflow-x-scroll overflow-y-hidden lg:overflow-y-scroll lg:overflow-x-hidden items-start">
           {filters.map((filter) => (
-            <div key={filter[0]} className=" w-[80px] flex flex-col">
+            <div
+              key={filter[0]}
+              className=" w-[80px] flex-shrink-0 flex flex-col gap-1"
+            >
               <button
-                className="rounded-md w-[80px] h-[100px]"
+                className="rounded-md w-full h-[100px]"
                 onClick={() =>
                   generateFilters[filter[0]](ctx, originalImage, false)
                 }
               >
-                <img
-                  src={filter[1]}
-                  className="rounded-md"
-                  width={80}
-                  height={100}
-                />
+                <img src={filter[1]} className="rounded-md w-full h-full" />
               </button>
-              <p className="text-center w-full font-medium opacity-100">
+              <p
+                className={cn(
+                  "text-center w-full text-xs font-medium opacity-100",
+                  rockSalt.className
+                )}
+              >
                 {filter[0]}
               </p>
             </div>
@@ -147,6 +168,7 @@ const generateFilterFunction = (rgbFactor: {
 };
 
 const generateFilters: Record<FilterName, GenerateFilterFunction> = {
+  original: generateFilterFunction({ r: 1, g: 1, b: 1 }),
   sunset: generateFilterFunction({ r: 1.2, g: 1.1, b: 0.8 }),
   vintage: generateFilterFunction({ r: 1.3, g: 0.9, b: 0.7 }), // Toggle values for a different vintage look
   neon: generateFilterFunction({ r: 1.6, g: 0.8, b: 1.8 }), // Increase contrast for a vibrant neon effect
@@ -155,4 +177,14 @@ const generateFilters: Record<FilterName, GenerateFilterFunction> = {
   silverscreen: generateFilterFunction({ r: 1.1, g: 1.1, b: 0.9 }),
   noir: generateFilterFunction({ r: 1.3, g: 1.3, b: 1.3 }), // Increase overall brightness for a film noir effect
   dreamy: generateFilterFunction({ r: 1.2, g: 0.95, b: 1.3 }), // Soften colors for a dreamy atmosphere
+  firestorm: generateFilterFunction({ r: 1.8, g: 0.3, b: 0.1 }), // Intense reds and oranges for a fiery effect
+  galaxy: generateFilterFunction({ r: 0.5, g: 0.7, b: 1.5 }), // Deep blues and purples for a cosmic look
+  holographic: generateFilterFunction({ r: 1.5, g: 0.6, b: 1.9 }), // Iridescent colors for a holographic vibe
+  glitch: generateFilterFunction({ r: 1.4, g: 1.2, b: 0.5 }),
+  pastel: generateFilterFunction({ r: 1.1, g: 1.3, b: 1.5 }),
+  popart: generateFilterFunction({ r: 1.8, g: 0.9, b: 0.2 }),
+  underwater: generateFilterFunction({ r: 0.5, g: 0.9, b: 1.6 }),
+  rainbow: generateFilterFunction({ r: 1.8, g: 0.8, b: 1.2 }),
+  sketch: generateFilterFunction({ r: 0.9, g: 0.9, b: 0.9 }),
+  infrared: generateFilterFunction({ r: 0.9, g: 1.6, b: 1.4 }),
 } as const;

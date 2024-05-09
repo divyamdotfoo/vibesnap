@@ -7,15 +7,14 @@ import { Filters } from "./Filters";
 import { cn } from "@/lib/utils";
 export function EditCanvas() {
   const imgUrls = useThumbnails((s) => s.thumbnails);
-  const { ctx, setCtx, setOriginal, setShowCanvas, showCanvas, setLoading } =
-    useCanvas((s) => ({
-      ctx: s.ctx,
-      setCtx: s.setCtx,
-      setOriginal: s.setOriginalImage,
-      showCanvas: s.showCanvas,
-      setShowCanvas: s.setShow,
-      setLoading: s.setLoading,
-    }));
+  const { ctx, setCtx, setOriginal, showCanvas } = useCanvas((s) => ({
+    ctx: s.ctx,
+    setCtx: s.setCtx,
+    setOriginal: s.setOriginalImage,
+    showCanvas: s.showCanvas,
+    setShowCanvas: s.setShow,
+    setLoading: s.setLoading,
+  }));
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   useEffect(() => {
     if (canvasRef.current) {
@@ -32,8 +31,6 @@ export function EditCanvas() {
           : 80 * imgUrls.length;
       setTimeout(() => {
         setOriginal();
-        setShowCanvas(true);
-        setLoading(false);
       }, timeOut);
     }
   }, [imgUrls]);
@@ -41,22 +38,25 @@ export function EditCanvas() {
   return (
     <div
       className={cn(
-        "flex items-center gap-4 justify-center pt-5 pb-2p0 z-0 ",
+        "\
+    md:pt-5 pt-10 pb-20 z-0 ",
         showCanvas ? "" : "hidden"
       )}
     >
-      <div className=" flex flex-col items-center gap-4 md:w-[360px] w-[320px]">
+      <div className=" flex flex-col lg:flex-row lg:items-start items-center justify-center lg:gap-4 gap-6 ">
         <canvas
           ref={canvasRef}
           width={360}
           height={450}
           className="rounded-md md:w-[360px] md:h-[450px] w-[320px] h-[400px]"
         />
-        <Filters />
-      </div>
-      <div className=" hidden md:flex flex-col gap-2">
-        <DownLoadButton />
-        <ShareBtn />
+        <div className=" flex flex-col items-start gap-4">
+          <Filters />
+          <div className="flex gap-2 items-center w-full justify-center ">
+            <DownLoadButton />
+            <ShareBtn />
+          </div>
+        </div>
       </div>
     </div>
   );
