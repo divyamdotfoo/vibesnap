@@ -1,33 +1,43 @@
-import { cn } from "@/lib/utils";
-import { Rock_Salt } from "next/font/google";
 import GithubIcon from "@mui/icons-material/GitHub";
 import TwitterIcon from "@mui/icons-material/X";
+import { cn, rockSalt } from "@/lib/utils";
 import { Input } from "@/components/Input";
-import { Vibes } from "@/components/HangingImage";
 import { EditCanvas } from "@/components/Canvas";
-const rockSalt = Rock_Salt({ subsets: ["latin"], weight: ["400"] });
+import { Vibes } from "@/components/HangingImage";
+import { Filters } from "@/components/Filters";
+import { Loader } from "@/components/loader";
+import Link from "next/link";
+
 export default function Page() {
   return (
-    <div className=" w-full h-full min-h-screen min-w-fit relative">
+    <div className=" w-full min-h-screen relative">
+      {/* absoulutely positioned */}
+      <Socials />
+      <Loader />
       <div className="overflow-hidden absolute inset-0 -z-40">
         <div className="animate-gradient inset-0 absolute"></div>
       </div>
-      <div className="flex items-center gap-16">
-        <h1 className={cn("text-5xl p-5", rockSalt.className)}>VibeSnap</h1>
-        <Input />
+      <div className=" xl:max-w-[1200px]  mx-auto">
+        <div className="flex flex-col w-full md:flex-row items-center lg:gap-16 gap-4 ">
+          <h1 className={cn("text-5xl p-5", rockSalt.className)}>VibeSnap</h1>
+          <Input />
+        </div>
+        <Vibes />
+        <EditCanvas />
       </div>
-      <Vibes />
-      <EditCanvas />
-      <Socials />
     </div>
   );
 }
 
 function Socials() {
   return (
-    <div className=" fixed bottom-4 right-4 flex items-center gap-2">
-      <GithubIcon />
-      <TwitterIcon />
+    <div className=" absolute bottom-4 z-50 right-4 flex items-center gap-2">
+      <Link href={"https://github.com/divyamdotfoo/vibesnap"} target="_blank">
+        <GithubIcon />
+      </Link>
+      <Link href={"https://x.com/divyamdotfoo"}>
+        <TwitterIcon />
+      </Link>
     </div>
   );
 }

@@ -2,6 +2,9 @@
 import { thumbnailType } from "@/types";
 import { useEffect, useRef } from "react";
 import { useCanvas, useThumbnails } from "@/store";
+import { DownLoadButton, ShareBtn } from "./Btns";
+import { Filters } from "./Filters";
+import { cn } from "@/lib/utils";
 export function EditCanvas() {
   const imgUrls = useThumbnails((s) => s.thumbnails);
   const { ctx, setCtx, setOriginal, setShowCanvas, showCanvas, setLoading } =
@@ -25,8 +28,8 @@ export function EditCanvas() {
       drawImages(ctx, imgUrls, canvasRef.current);
       const timeOut =
         imgUrls[0].source === "spotify"
-          ? 30 * imgUrls.length
-          : 60 * imgUrls.length;
+          ? 100 * imgUrls.length
+          : 80 * imgUrls.length;
       setTimeout(() => {
         setOriginal();
         setShowCanvas(true);
@@ -36,16 +39,25 @@ export function EditCanvas() {
   }, [imgUrls]);
 
   return (
-    <div className="">
-      <canvas
-        ref={canvasRef}
-        width={450}
-        height={560}
-        className=" bg-white mx-auto rounded-md scale-75 -translate-y-16"
-        style={{
-          display: showCanvas ? "" : "none",
-        }}
-      />
+    <div
+      className={cn(
+        "flex items-center gap-4 justify-center pt-5 pb-2p0 z-0 ",
+        showCanvas ? "" : "hidden"
+      )}
+    >
+      <div className=" flex flex-col items-center gap-4 md:w-[360px] w-[320px]">
+        <canvas
+          ref={canvasRef}
+          width={360}
+          height={450}
+          className="rounded-md md:w-[360px] md:h-[450px] w-[320px] h-[400px]"
+        />
+        <Filters />
+      </div>
+      <div className=" hidden md:flex flex-col gap-2">
+        <DownLoadButton />
+        <ShareBtn />
+      </div>
     </div>
   );
 }

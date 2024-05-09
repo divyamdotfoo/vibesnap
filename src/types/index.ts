@@ -60,6 +60,7 @@ export type ThumbnailResponse = Promise<
       url: string;
     }[]
   | {
-      error: string;
+      errorTitle: string;
+      errorMessage: string;
     }
 >;

@@ -1,26 +1,35 @@
 "use client";
 import { getSpotifyThumbnails, getYoutubeVideoThumbnails } from "@/lib/actions";
-import { extractPlaylistId } from "@/lib/utils";
+import { cn, extractPlaylistId, rockSalt } from "@/lib/utils";
 import { useCanvas, useThumbnails } from "@/store";
 import { useState } from "react";
+import { useToast } from "./ui/use-toast";
 
 export function Input() {
   const setImageUrls = useThumbnails((s) => s.setThumbnails);
-  const { loading, setLoading } = useCanvas((s) => ({
+  const { toast } = useToast();
+  const { loading, setLoading, setShowCanvas } = useCanvas((s) => ({
     loading: s.loading,
     setLoading: s.setLoading,
+    setShowCanvas: s.setShow,
   }));
-  const [val, setVal] = useState("");
-  const [err, setErr] = useState("");
+  const [val, setVal] = useState(
+    "https://open.spotify.com/playlist/37i9dQZEVXbNG2KDcFcKOF?si=uuqpvjlrS4yJFjm1D0_FOA&pi=Q9cp6qlMQkWJq"
+  );
   const handlefetchingThumbnails = async () => {
     if (!val) return;
     const extracted = extractPlaylistId(val);
     if (!extracted) return;
     setLoading(true);
+    setShowCanvas(false);
     if (extracted.source === "youtube") {
       const data = await getYoutubeVideoThumbnails(extracted.id);
       if (!Array.isArray(data)) {
-        setErr(data.error);
+        setLoading(false);
+        toast({
+          title: data.errorTitle,
+          description: data.errorMessage,
+        });
         return;
       }
       setImageUrls(data.slice(0, 36));
@@ -28,31 +37,40 @@ export function Input() {
     if (extracted.source === "spotify") {
       const data = await getSpotifyThumbnails(extracted.id);
       if (!Array.isArray(data)) {
-        setErr(data.error);
+        setLoading(false);
+        toast({
+          title: data.errorTitle,
+          description: data.errorMessage,
+        });
         return;
       }
       setImageUrls(data.slice(0, 9));
     }
   };
   return (
-    <div className=" flex items-stretch gap-4">
+    <div className=" flex w-full md:w-auto items-stretch justify-around md:gap-4">
       <input
         type="text"
         value={val}
-        className=" p-2 rounded-md text-primary shadow-2xl shadow-white bg-transparent placeholder:text-primary placeholder:opacity-80 placeholder:font-bold border-white border-2 focus:outline-none w-[400px]"
-        placeholder="Drop spotify/youtube playlist link here"
+        className={cn(
+          " p-2 rounded-md placeholder:tracking-wider text-sm text-primary shadow-2xl shadow-white/60 bg-transparent placeholder:text-primary placeholder:opacity-80 placeholder:font-bold border-white border-2 focus:outline-none w-2/3 md:w-[300px] lg:w-[360px]",
+          rockSalt.className
+        )}
+        placeholder="Drop your playlist link here"
         onChange={(e) => setVal(e.target.value)}
         autoFocus
         spellCheck={false}
       />
 
       <button
-        className=" px-4 rounded-md text-lg font-semibold border-white border-2 shadow-2xl shadow-white"
+        className={cn(
+          " px-4 rounded-md md:text-lg text-base font-semibold border-white border-2 shadow-2xl shadow-white/60",
+          rockSalt.className
+        )}
         onClick={handlefetchingThumbnails}
       >
-        {loading ? "Vibing..." : "Vibe it!"}
+        Vibe it !
       </button>
-      <span>{err}</span>
     </div>
   );
 }

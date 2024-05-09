@@ -13,17 +13,20 @@ export const getYoutubeVideoThumbnails = async (
   const res = await fetch(playListUrl);
   if (!res)
     return {
-      error: "While getting the playlist from youtube",
+      errorTitle: "Oops!",
+      errorMessage: "Try again later",
     };
   const data = (await res.json()) as GoogleAPIResponse;
   if (!data.items) {
     return {
-      error: "No playlist found",
+      errorTitle: "No playlist found",
+      errorMessage: "Check your url and try again",
     };
   }
   if (!data.items.length) {
     return {
-      error: "Playlist is empty",
+      errorTitle: "Playlist is empty",
+      errorMessage: "Fill your playlist and try again.",
     };
   }
   return filterUniqueThumbnails(
@@ -48,9 +51,23 @@ export const getSpotifyThumbnails = async (
       headers: headers,
     }
   );
-  if (!res) return { error: "internal server error" };
+  if (!res)
+    return {
+      errorTitle: "Oops!",
+      errorMessage: "Try again later",
+    };
   const data = (await res.json()) as SpotifyAPIResponse;
-  if (data.error) return { error: data.error.message };
+  if (data.error)
+    return {
+      errorTitle: "No playlist found",
+      errorMessage: "Check your url and try again",
+    };
+  if (data.items && !data.items.length) {
+    return {
+      errorTitle: "Playlist is empty",
+      errorMessage: "Fill your playlist and try again.",
+    };
+  }
   if (data.items) {
     return filterUniqueThumbnails(
       data.items
@@ -60,5 +77,5 @@ export const getSpotifyThumbnails = async (
         .map((d) => ({ ...d.track.album.images[1], source: "spotify" }))
     );
   }
-  return { error: "Internal server error. Try again after some time" };
+  return { errorTitle: "Oops!", errorMessage: "Try again later" };
 };

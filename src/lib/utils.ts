@@ -1,10 +1,12 @@
 import { Thumbnails, thumbnailType } from "@/types";
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
-
+import { Rock_Salt } from "next/font/google";
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
+
+export const rockSalt = Rock_Salt({ subsets: ["latin"], weight: ["400"] });
 
 export function extractPlaylistId(url: string): {
   source: "youtube" | "spotify";

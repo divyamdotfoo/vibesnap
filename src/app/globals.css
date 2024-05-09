@@ -24,11 +24,11 @@
     --input: 240 3.7% 15.9%;
     --ring: 240 4.9% 83.9%;
     --radius: 0.75rem;
-    --yellow: #ffd600;
-    --orange: #ff7a00;
-    --pink: #ff0069;
-    --purple: #d300c5;
-    --blue: #7638fa;
+    --yellow: 255, 214, 0;
+    --orange: 255, 122, 0;
+    --pink: 255, 0, 105;
+    --purple: 211, 0, 197;
+    --blue: 118, 56, 250;
   }
 }
 body {
@@ -39,11 +39,11 @@ body {
   background-size: 200% 200%;
   background-image: linear-gradient(
     to right top,
-    var(--yellow),
-    var(--orange),
-    var(--pink),
-    var(--purple),
-    var(--blue)
+    rgba(var(--yellow)),
+    rgba(var(--orange)),
+    rgba(var(--pink)),
+    rgba(var(--purple)),
+    rgba(var(--blue))
   );
   animation: gradient 10s ease infinite alternate;
 }
@@ -61,20 +61,17 @@ body {
   }
 }
 
-@keyframes wiggle {
-  0%,
-  20%,
-  40%,
-  60%,
-  80%,
-  100% {
-    transform: rotate(13deg);
-  }
-  10%,
-  30%,
-  50%,
-  70%,
-  90% {
-    transform: rotate(15deg);
-  }
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.toast {
+  background-image: linear-gradient(
+    to right top,
+    rgba(var(--yellow), 0.7),
+    rgba(var(--orange), 0.7),
+    rgba(var(--pink), 0.7),
+    rgba(var(--purple), 0.7),
+    rgba(var(--blue), 0.7)
+  );
 }
