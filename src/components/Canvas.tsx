@@ -5,15 +5,17 @@ import { useCanvas, useThumbnails } from "@/store";
 import { DownLoadButton, ShareBtn } from "./Btns";
 import { Filters } from "./Filters";
 import { cn } from "@/lib/utils";
+import { Range } from "./range";
 export function EditCanvas() {
   const imgUrls = useThumbnails((s) => s.thumbnails);
-  const { ctx, setCtx, setOriginal, showCanvas } = useCanvas((s) => ({
+  const { ctx, setCtx, setOriginal, showCanvas, range } = useCanvas((s) => ({
     ctx: s.ctx,
     setCtx: s.setCtx,
     setOriginal: s.setOriginalImage,
     showCanvas: s.showCanvas,
     setShowCanvas: s.setShow,
     setLoading: s.setLoading,
+    range: s.range,
   }));
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   useEffect(() => {
@@ -24,7 +26,7 @@ export function EditCanvas() {
 
   useEffect(() => {
     if (ctx && canvasRef.current && imgUrls.length) {
-      drawImages(ctx, imgUrls, canvasRef.current);
+      drawImages(ctx, imgUrls.slice(0, range));
       const timeOut =
         imgUrls[0].source === "spotify"
           ? 100 * imgUrls.length
@@ -37,11 +39,7 @@ export function EditCanvas() {
 
   return (
     <div
-      className={cn(
-        "\
-    md:pt-5 pt-10 pb-20 z-0 ",
-        showCanvas ? "" : "hidden"
-      )}
+      className={cn(" md:pt-5 pt-10 pb-20 z-0 ", showCanvas ? "" : "hidden")}
     >
       <div className=" flex flex-col lg:flex-row lg:items-start items-center justify-center lg:gap-4 gap-6 ">
         <canvas
@@ -50,9 +48,10 @@ export function EditCanvas() {
           height={450}
           className="rounded-md md:w-[360px] md:h-[450px] w-[320px] h-[400px]"
         />
-        <div className=" flex flex-col items-start gap-4">
+        <div className=" flex flex-col md:items-start items-center gap-6">
           <Filters />
-          <div className="flex gap-2 items-center w-full justify-center ">
+          <Range />
+          <div className=" pt-4 flex gap-2 items-center w-full justify-center ">
             <DownLoadButton />
             <ShareBtn />
           </div>
@@ -67,10 +66,10 @@ export function drawImages(
   imgUrls: {
     source: thumbnailType;
     url: string;
-  }[],
-  canvasEl: HTMLCanvasElement
+  }[]
 ) {
   if (!imgUrls.length) return;
+  const canvasEl = ctx.canvas;
   ctx.clearRect(0, 0, canvasEl.width, canvasEl.height);
   let tileLayout: ReturnType<typeof calculateTileLayout>;
   tileLayout = calculateTileLayout(

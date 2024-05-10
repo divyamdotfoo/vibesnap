@@ -25,6 +25,8 @@ const FILTERS = [
   "sketch",
   "infrared",
 ] as const;
+type FilterName = (typeof FILTERS)[number];
+type Filters = [keyof typeof generateFilters, string][];
 
 export function Filters() {
   const { ctx, originalImage, setShowCanvas, setLoading } = useCanvas((s) => ({
@@ -36,35 +38,39 @@ export function Filters() {
   const [blobUrls, setBlobUrls] = useState<string[]>([]);
   const tempCanvas = useRef<HTMLCanvasElement | null>(null);
   const [filters, setFilters] = useState<Filters>([]);
-  const setFilterFunc = (filter: [keyof typeof generateFilters, string]) => {
-    setFilters((prev) => [...prev, filter]);
-  };
+
   const setBlobUrlFunc = (blob: string) =>
     setBlobUrls((prev) => [...prev, blob]);
   useEffect(() => {
-    setFilters([]);
     blobUrls.forEach((b) => {
       URL.revokeObjectURL(b);
     });
     setBlobUrls([]);
     async function populateFilters() {
+      const newFilters: Filters = [];
+      const pushFilter = (filter: [keyof typeof generateFilters, string]) =>
+        newFilters.push(filter);
       for (const filter of FILTERS) {
-        await new Promise((res) => setTimeout(res, 30));
         generateFilters[filter](
           ctx,
           originalImage,
           true,
           tempCanvas.current,
           filter,
-          setFilterFunc,
+          pushFilter,
           setBlobUrlFunc
         );
+        await new Promise((res) => setTimeout(res, 30));
+        console.log(newFilters);
       }
+      setFilters(newFilters);
     }
     populateFilters();
   }, [originalImage]);
   useEffect(() => {
+    console.log("length", filters.length);
     if (filters.length === FILTERS.length) {
+      console.log("i ran");
       setShowCanvas(true);
       setLoading(false);
     }
@@ -108,8 +114,6 @@ export function Filters() {
   );
 }
 
-type FilterName = (typeof FILTERS)[number];
-type Filters = [keyof typeof generateFilters, string][];
 type GenerateFilterFunction = (
   ctx: CanvasRenderingContext2D | null,
   original: ImageData | null,

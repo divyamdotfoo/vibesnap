@@ -23,10 +23,10 @@ export const getYoutubeVideoThumbnails = async (
       errorMessage: "Check your url and try again",
     };
   }
-  if (!data.items.length) {
+  if (!data.items.length || data.items.length <= 3) {
     return {
-      errorTitle: "Playlist is empty",
-      errorMessage: "Fill your playlist and try again.",
+      errorTitle: "Add some more songs",
+      errorMessage: "Your playlist has very less songs.",
     };
   }
   return filterUniqueThumbnails(
@@ -64,10 +64,13 @@ export const getSpotifyThumbnails = async (
         errorTitle: "No playlist found",
         errorMessage: "Check your url and try again",
       };
-    if (data.items && !data.items.length) {
+    if (
+      (data.items && !data.items.length) ||
+      (data.items && data.items.length <= 3)
+    ) {
       return {
-        errorTitle: "Playlist is empty",
-        errorMessage: "Fill your playlist and try again.",
+        errorTitle: "Add some more songs",
+        errorMessage: "Your playlist has very less songs.",
       };
     }
     if (data.items) {

@@ -18,7 +18,13 @@ export function Input() {
   const handlefetchingThumbnails = async () => {
     if (!val) return;
     const extracted = extractPlaylistId(val);
-    if (!extracted) return;
+    if (!extracted) {
+      toast({
+        title: "Vibesnap only supports youtube and spotify",
+        description: "Try with a spotify/youtube playlist",
+      });
+      return;
+    }
     setLoading(true);
     setShowCanvas(false);
     if (extracted.source === "youtube") {
@@ -31,7 +37,7 @@ export function Input() {
         });
         return;
       }
-      setImageUrls(data.slice(0, 36));
+      setImageUrls(data.sort(() => Math.random() - 0.5).slice(0, 36));
     }
     if (extracted.source === "spotify") {
       const data = await getSpotifyThumbnails(extracted.id);
@@ -43,7 +49,7 @@ export function Input() {
         });
         return;
       }
-      setImageUrls(data.slice(0, 9));
+      setImageUrls(data.sort(() => Math.random() - 0.5).slice(0, 36));
     }
   };
   return (

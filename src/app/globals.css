@@ -31,6 +31,9 @@
     --blue: 118, 56, 250;
   }
 }
+.temp {
+  color: #ffd600;
+}
 body {
   @apply bg-background text-primary;
 }
@@ -94,4 +97,20 @@ body {
     rgba(var(--purple), 0.7),
     rgba(var(--blue), 0.7)
   );
+}
+.rc-slider-dot-active {
+  background-image: radial-gradient(
+    rgba(var(--yellow)),
+    rgba(var(--orange)),
+    rgba(var(--pink)),
+    rgba(var(--purple)),
+    rgba(var(--blue))
+  ) !important;
+}
+
+.rc-slider-mark-text-active,
+.rc-slider-mark-text {
+  color: white !important;
+  font-family: "__Rock_Salt_0b6fbb", "__Rock_Salt_Fallback_0b6fbb" !important;
+  font-size: 10px !important;
 }

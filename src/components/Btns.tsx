@@ -44,9 +44,9 @@ export function ShareBtn() {
           try {
             console.log("going to share", b);
             await navigator.share({
-              title: "Vibe",
-              text: "Vibesnap: Share your playlist's mosaic magic! 🎵✨ #Vibesnap #MusicMosaic",
-              files: [new File([b], "vibesnap", { type: b.type })],
+              files: [new File([b], "vibesnap.png", { type: "image/png" })],
+              url: "https://vibesnap.vercel.app",
+              text: "Share your playlist's mosaic magic!🎵✨",
             });
           } catch (e) {
             console.log(e);
@@ -56,15 +56,17 @@ export function ShareBtn() {
     }
   };
   return (
-    <button
+    <motion.button
       onClick={handler}
+      whileHover={{ scale: 1.02 }}
+      whileTap={{ scale: 0.95 }}
       className={cn(
-        "sm:hidden border-2 border-white px-4 py-2 rounded-sm shadow-xl text-sm shadow-black/20 flex items-center gap-2",
+        "border-2 border-white px-4 py-2 rounded-sm shadow-xl text-sm shadow-black/20 flex items-center gap-2",
         rockSalt.className
       )}
     >
       <p>Share</p>
       <Share fontSize="medium" />
-    </button>
+    </motion.button>
   );
 }

@@ -1,11 +1,12 @@
 import GithubIcon from "@mui/icons-material/GitHub";
 import TwitterIcon from "@mui/icons-material/X";
-import { cn, rockSalt } from "@/lib/utils";
-import { Input } from "@/components/Input";
-import { EditCanvas } from "@/components/Canvas";
-import { Vibes } from "@/components/HangingImage";
 import { Loader } from "@/components/loader";
 import Link from "next/link";
+import { Range } from "@/components/range";
+import { Input } from "@/components/Input";
+import { Vibes } from "@/components/HangingImage";
+import { cn, rockSalt } from "@/lib/utils";
+import { EditCanvas } from "@/components/Canvas";
 
 export default function Page() {
   return (
