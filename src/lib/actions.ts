@@ -112,7 +112,6 @@ const getSpotifyToken = async () => {
   );
   const data = await res.json();
   if (data.access_token) {
-    console.log(data.access_token);
     return data.access_token as string;
   }
   throw new Error("");

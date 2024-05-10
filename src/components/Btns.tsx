@@ -42,7 +42,6 @@ export function ShareBtn() {
             return console.log("not allowed");
           }
           try {
-            console.log("going to share", b);
             await navigator.share({
               files: [new File([b], "vibesnap.png", { type: "image/png" })],
               url: "https://vibesnap.vercel.app",

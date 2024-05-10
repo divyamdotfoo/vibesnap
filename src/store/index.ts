@@ -40,8 +40,8 @@ export const useCanvas = create<CanvasStore>((set) => ({
       drawImages(ctx, imgUrls);
       const timeOut =
         imgUrls[0].source === "spotify"
-          ? 50 * imgUrls.length
-          : 50 * imgUrls.length;
+          ? 70 * imgUrls.length
+          : 100 * imgUrls.length;
       setTimeout(() => {
         useCanvas.getState().setOriginalImage();
       }, timeOut);
