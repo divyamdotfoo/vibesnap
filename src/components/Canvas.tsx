@@ -28,7 +28,7 @@ export function EditCanvas() {
     if (ctx && canvasRef.current && imgUrls.length) {
       drawImages(ctx, imgUrls.slice(0, range));
       const timeOut =
-        imgUrls[0].source === "spotify" ? 80 * range : 120 * range;
+        imgUrls[0].source === "spotify" ? 100 * range : 200 * range;
       setTimeout(() => {
         setOriginal();
       }, timeOut);
