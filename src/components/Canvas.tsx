@@ -48,7 +48,7 @@ export function EditCanvas() {
         />
         <div className=" flex flex-col md:items-start items-center gap-6">
           <Filters />
-          <Range />
+          {/* <Range /> */}
           <div className=" pt-4 flex gap-2 items-center w-full justify-center ">
             <DownLoadButton />
             <ShareBtn />

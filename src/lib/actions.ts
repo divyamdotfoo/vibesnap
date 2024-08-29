@@ -17,6 +17,7 @@ export const getYoutubeVideoThumbnails = async (
       errorMessage: "Try again later",
     };
   const data = (await res.json()) as GoogleAPIResponse;
+  console.log(data);
   if (!data.items) {
     return {
       errorTitle: "No playlist found",

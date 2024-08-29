@@ -9,10 +9,10 @@ import { motion } from "framer-motion";
 export function Input() {
   const setImageUrls = useThumbnails((s) => s.setThumbnails);
   const { toast } = useToast();
-  const { setLoading, setShowCanvas } = useCanvas((s) => ({
-    loading: s.loading,
+  const { setLoading, setShowCanvas, setRange } = useCanvas((s) => ({
     setLoading: s.setLoading,
     setShowCanvas: s.setShow,
+    setRange: s.setRange,
   }));
   const [val, setVal] = useState("");
   const handlefetchingThumbnails = async () => {
@@ -37,7 +37,8 @@ export function Input() {
         });
         return;
       }
-      setImageUrls(data.sort(() => Math.random() - 0.5).slice(0, 36));
+      setImageUrls(data.sort(() => Math.random() - 0.5));
+      setRange(data.length);
     }
     if (extracted.source === "spotify") {
       const data = await getSpotifyThumbnails(extracted.id);
@@ -49,7 +50,8 @@ export function Input() {
         });
         return;
       }
-      setImageUrls(data.sort(() => Math.random() - 0.5).slice(0, 36));
+      setImageUrls(data.sort(() => Math.random() - 0.5));
+      setRange(data.length);
     }
   };
   return (

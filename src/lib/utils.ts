@@ -64,5 +64,5 @@ export const filterUniqueThumbnails = async (
       uniqueThumbnails.push({ source: tHash.source, url: tHash.url });
     }
   }
-  return uniqueThumbnails;
+  return uniqueThumbnails.slice(0, 25);
 };
